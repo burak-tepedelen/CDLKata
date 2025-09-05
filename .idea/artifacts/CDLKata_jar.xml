@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="CDLKata:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/CDLKata_jar</output-path>
+    <output-path>$PROJECT_DIR$/CDLKata_jar</output-path>
     <root id="archive" name="CDLKata.jar">
       <element id="module-output" name="CDLKata" />
     </root>

@@ -1,67 +1,6 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Scanner;
-
-class PriceInfo {
-    String id;
-    int unitPrice; //normal price for a single item
-    int discountQuantity; //number of items in the discounted batch
-    int specialPrice; //total price for the discounted batch
-
-    //Constructor for no discounts
-    PriceInfo(String id, int unitPrice) {
-        this.id = id;
-        this.unitPrice = unitPrice;
-        this.discountQuantity = 0;
-        this.specialPrice = 0;
-    }
-    //Constructor for discounted items
-    PriceInfo(String id, int unitPrice, int discountQuantity, int specialPrice) {
-        this.id = id;
-        this.unitPrice = unitPrice;
-        this.discountQuantity = discountQuantity;
-        this.specialPrice = specialPrice;
-    }
-}
-
-class ShoppingCart {
-    private final HashMap<String, Integer> basket;
-    private final HashMap<String, PriceInfo> pricingRules;
-
-    //Constructor, takes price rules as a PriceInfo list, creates an empty basket
-    public ShoppingCart(ArrayList<PriceInfo> priceList) {
-        pricingRules = new HashMap<>();
-        basket = new HashMap<>();
-        for (PriceInfo info : priceList) {
-            pricingRules.put(info.id, info);
-        }
-    }
-
-    public void addItemToBasket(String id) {
-        if (pricingRules.containsKey(id)) {
-            basket.put(id, basket.getOrDefault(id, 0) + 1);
-        } else if (id.length() != 1) {
-            throw new IllegalArgumentException("Item ID's are individual letters of the alphabet (A, B, C, and so on). Please try again:");
-        } else {
-            throw new IllegalArgumentException("Invalid item ID. Please try again:");
-        }
-    }
-
-    public int calculateCost() {
-        int total = 0;
-        for (var item : basket.entrySet()) {
-            PriceInfo p = pricingRules.get(item.getKey());
-            int discountedBatch = 0;
-            if (p.discountQuantity > 1) {
-                discountedBatch = item.getValue() / p.discountQuantity;
-                total += discountedBatch * p.specialPrice;
-            }
-            total += (item.getValue() - discountedBatch * p.discountQuantity) * p.unitPrice;
-        }
-        return total;
-    }
-}
 
 public class CheckoutSystem {
     static ArrayList<PriceInfo> priceListGenerator(Scanner sc) {
@@ -91,7 +30,7 @@ public class CheckoutSystem {
                         if (nextToken.equals("DONE")) {
                             System.out.println("Manual pricing rules set");
                             break;
-                        } else if (nextToken.length() == 1) {
+                        } else if (nextToken.length() == 1 && Character.isLetter(nextToken.charAt(0))) {
                             String id = nextToken;
                             int unitPrice, discountQuantity, specialPrice = 0;
                             System.out.println("Unit Price:");
@@ -122,7 +61,7 @@ public class CheckoutSystem {
                             }
                             priceList.add(new PriceInfo(id, unitPrice, discountQuantity, specialPrice));
                         } else {
-                            System.out.println("Product id must be an individual letter");
+                            System.out.println("Product id must be a single letter");
                         }
                     }
                     break loop;
